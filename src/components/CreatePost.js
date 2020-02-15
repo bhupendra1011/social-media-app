@@ -1,11 +1,20 @@
 import React from "react";
 
-function CreatePost() {
+function CreatePost({ user, setPosts, handleAddPost }) {
   const [content, setContent] = React.useState("");
   const [image, setImage] = React.useState(null);
+  const imageInputRef = React.useRef();
 
   function handlePostSubmit(e) {
     e.preventDefault();
+    const post = { user, content, image };
+
+    handleAddPost(post);
+    // using callback from App to add post
+    // setPosts(prevPosts => [post, ...prevPosts]);
+    // clearing input fields
+    setContent("");
+    imageInputRef.current.value = "";
   }
   return (
     <div>
@@ -13,20 +22,17 @@ function CreatePost() {
       <form onSubmit={handlePostSubmit}>
         <input
           type="text"
+          value={content}
           placeholder="Add post text"
           onChange={e => setContent(e.target.value)}
         />
-        <input type="file" onChange={e => setImage(e.target.files[0])} />
+        <input
+          ref={imageInputRef}
+          type="file"
+          onChange={e => setImage(e.target.files[0])}
+        />
         <button>Submit</button>
       </form>
-      <p> {content}</p>
-      {image && (
-        <img
-          alt="post-img"
-          style={{ width: 200, height: 100, objectFit: "cover" }}
-          src={URL.createObjectURL(image)}
-        />
-      )}
     </div>
   );
 }

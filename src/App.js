@@ -4,14 +4,13 @@ import Header from "./components/Header";
 import CreatePost from "./components/CreatePost";
 import PostList from "./components/PostList";
 
-const fnCount = new Set();
+export const userContext = React.createContext();
 
 function App() {
   const [user, setUser] = React.useState("");
   const [posts, setPosts] = React.useState([]);
-  const [counter, setCounter] = React.useState(0);
 
-  // below fn was creating new instance of handleAddPost every time a state was changing
+  // below fn was re creating new instance of handleAddPost every time a state was changing
   // function handleAddPost(post) {
   //   setPosts([post, ...posts]);
   // }
@@ -22,8 +21,6 @@ function App() {
     },
     [posts]
   );
-  fnCount.add(handleAddPost);
-  console.log(fnCount);
 
   React.useEffect(() => {
     document.title = user ? `${user}'s feed` : "Please login";
@@ -31,19 +28,16 @@ function App() {
 
   if (!user) return <Login setUser={setUser} />;
   return (
-    <>
+    <userContext.Provider value={user}>
       <Header user={user} setUser={setUser} />
-      {counter}
-      <button onClick={() => setCounter(prevCounter => prevCounter + 1)}>
-        +
-      </button>
+
       <CreatePost
         user={user}
         setPosts={setPosts}
         handleAddPost={handleAddPost}
       />
       <PostList posts={posts} />
-    </>
+    </userContext.Provider>
   );
 }
 

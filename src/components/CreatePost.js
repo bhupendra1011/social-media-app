@@ -1,15 +1,19 @@
 import React from "react";
 
+import { PostContext } from "../App";
+
 function CreatePost({ user, setPosts, handleAddPost }) {
+  const { dispatch } = React.useContext(PostContext);
   const [content, setContent] = React.useState("");
   const [image, setImage] = React.useState(null);
   const imageInputRef = React.useRef();
 
   function handlePostSubmit(e) {
     e.preventDefault();
-    const post = { user, content, image };
+    const post = { user, content, image, id: Date.now() };
 
-    handleAddPost(post);
+    dispatch({ type: "ADD_POST", payload: { post } });
+    // handleAddPost(post);
     // using callback from App to add post
     // setPosts(prevPosts => [post, ...prevPosts]);
     // clearing input fields
